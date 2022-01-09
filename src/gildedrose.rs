@@ -5,6 +5,14 @@ pub struct Item {
     pub quality: i32,
 }
 
+#[derive(PartialEq)]
+enum ItemType {
+    AgedBrie,
+    HandOfRagnaros,
+    BackstagePass,
+    Regular
+}
+
 impl Item {
     pub fn new(name: impl Into<String>, sell_in: i32, quality: i32) -> Item {
         Item {
@@ -26,10 +34,18 @@ impl Item {
     fn reset_quality(&mut self) {
         self.quality = 0;
     }
-    fn pre_sell_in(&mut self) {
+    fn get_type(&self) -> ItemType {
         match self.name.as_str() {
-            "Aged Brie" => self.increase_quality(),
-            "Backstage passes to a TAFKAL80ETC concert" => {
+            "Aged Brie" => ItemType::AgedBrie,
+            "Sulfuras, Hand of Ragnaros" => ItemType::HandOfRagnaros,
+            "Backstage passes to a TAFKAL80ETC concert" => ItemType::BackstagePass,
+            _ => ItemType::Regular
+        }
+    }
+    fn pre_sell_in(&mut self) {
+        match self.get_type() {
+            ItemType::AgedBrie => self.increase_quality(),
+            ItemType::BackstagePass => {
                 self.increase_quality();
                 if self.sell_in < 11 {
                     self.increase_quality();
@@ -44,21 +60,21 @@ impl Item {
                     }
                 }
             }
-            "Sulfuras, Hand of Ragnaros" => (),
-            _ => self.decrease_quality(),
+            ItemType::HandOfRagnaros => (),
+            ItemType::Regular => self.decrease_quality()
         }
-    }
+   }
     fn sell_in(&mut self) {
-        if self.name != "Sulfuras, Hand of Ragnaros" {
+        if self.get_type() != ItemType::HandOfRagnaros {
             self.sell_in -= 1;
         }
     }
     fn post_sell_in(&mut self) {
-        match self.name.as_str() {
-            "Aged Brie" => self.increase_quality(),
-            "Backstage passes to a TAFKAL80ETC concert" => self.reset_quality(),
-            "Sulfuras, Hand of Ragnaros" => (),
-            _ => self.decrease_quality(),
+        match self.get_type() {
+            ItemType::AgedBrie => self.increase_quality(),
+            ItemType::BackstagePass => self.reset_quality(),
+            ItemType::HandOfRagnaros => (),
+            ItemType::Regular => self.decrease_quality(),
         };
     }
     pub fn update_quality(&mut self) {
