@@ -45,6 +45,26 @@ impl Item {
             }
         }
     }
+    pub fn sell_in(&mut self) {
+        if self.name != "Sulfuras, Hand of Ragnaros" {
+            self.sell_in -= 1;
+        }
+    }
+    pub fn post_sell_in(&mut self) {
+        if self.name == "Aged Brie" {
+            if self.quality < 50 {
+                self.increase_quality();
+            }
+        } else if self.name == "Backstage passes to a TAFKAL80ETC concert" {
+            self.reset_quality();
+        } else if self.name == "Sulfuras, Hand of Ragnaros" {
+
+        } else {
+            if self.quality > 0 {
+                self.decrease_quality();
+            }
+        }
+    }
 }
 
 impl Display for Item {
@@ -66,24 +86,8 @@ impl GildedRose {
         for item in &mut self.items {
             item.pre_sell_in();
             item.sell_in();
-            if item.name != "Sulfuras, Hand of Ragnaros" {
-                item.sell_in -= 1;
-            }
-
             if item.sell_in < 0 {
-                if item.name == "Aged Brie" {
-                    if item.quality < 50 {
-                        item.increase_quality();
-                    }
-                } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
-                    item.reset_quality();
-                } else if item.name == "Sulfuras, Hand of Ragnaros" {
-
-                } else {
-                    if item.quality > 0 {
-                        item.decrease_quality();
-                    }
-                }
+                item.post_sell_in();
             }
         }
     }
