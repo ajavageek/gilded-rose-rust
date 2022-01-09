@@ -23,25 +23,28 @@ impl Item {
         self.quality = 0;
     }
     pub fn pre_sell_in(&mut self) {
-        if self.name == "Aged Brie" {
-            if self.quality < 50 {
-                self.increase_quality();
-            }
-        } else if self.name == "Backstage passes to a TAFKAL80ETC concert" {
-            if self.quality < 50 {
-                self.increase_quality();
-
-                if self.quality < 50 && self.sell_in < 11 {
-                    self.increase_quality();
-                }
-                if self.quality < 50 && self.sell_in < 6 {
+        match self.name.as_str() {
+            "Aged Brie" => {
+                if self.quality < 50 {
                     self.increase_quality();
                 }
             }
-        } else if self.name == "Sulfuras, Hand of Ragnaros" {
-        } else {
-            if self.quality > 0 {
-                self.decrease_quality();
+            "Backstage passes to a TAFKAL80ETC concert" => {
+                if self.quality < 50 {
+                    self.increase_quality();
+                    if self.quality < 50 && self.sell_in < 11 {
+                        self.increase_quality();
+                    }
+                    if self.quality < 50 && self.sell_in < 6 {
+                        self.increase_quality();
+                    }
+                }
+            }
+            "Sulfuras, Hand of Ragnaros" => (),
+            _ => {
+                if self.quality > 0 {
+                    self.decrease_quality();
+                }
             }
         }
     }
@@ -51,19 +54,20 @@ impl Item {
         }
     }
     pub fn post_sell_in(&mut self) {
-        if self.name == "Aged Brie" {
-            if self.quality < 50 {
-                self.increase_quality();
+        match self.name.as_str() {
+            "Aged Brie" => {
+                if self.quality < 50 {
+                    self.increase_quality();
+                }
             }
-        } else if self.name == "Backstage passes to a TAFKAL80ETC concert" {
-            self.reset_quality();
-        } else if self.name == "Sulfuras, Hand of Ragnaros" {
-
-        } else {
-            if self.quality > 0 {
-                self.decrease_quality();
+            "Backstage passes to a TAFKAL80ETC concert" => self.reset_quality(),
+            "Sulfuras, Hand of Ragnaros" => (),
+            _ => {
+                if self.quality > 0 {
+                    self.decrease_quality();
+                }
             }
-        }
+        };
     }
 }
 
