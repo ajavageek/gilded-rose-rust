@@ -16,6 +16,12 @@ impl Item {
     pub fn increase_quality(&mut self) {
         self.quality += 1;
     }
+    pub fn decrease_quality(&mut self) {
+        self.quality -= 1;
+    }
+    pub fn reset_quality(&mut self) {
+        self.quality = 0;
+    }
 }
 
 impl Display for Item {
@@ -61,7 +67,7 @@ impl GildedRose {
 
             } else {
                 if item.quality > 0 {
-                    item.quality -= 1;
+                    item.decrease_quality();
                 }
             }
 
@@ -75,12 +81,12 @@ impl GildedRose {
                         item.increase_quality();
                     }
                 } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
-                    item.quality = item.quality - item.quality;
+                    item.reset_quality();
                 } else if item.name == "Sulfuras, Hand of Ragnaros" {
 
                 } else {
                     if item.quality > 0 {
-                        item.quality -= 1;
+                        item.decrease_quality();
                     }
                 }
             }
