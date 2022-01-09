@@ -13,20 +13,20 @@ impl Item {
             quality,
         }
     }
-    pub fn increase_quality(&mut self) {
+    fn increase_quality(&mut self) {
         if self.quality < 50 {
             self.quality += 1;
         }
     }
-    pub fn decrease_quality(&mut self) {
+    fn decrease_quality(&mut self) {
         if self.quality > 0 {
             self.quality -= 1;
         }
     }
-    pub fn reset_quality(&mut self) {
+    fn reset_quality(&mut self) {
         self.quality = 0;
     }
-    pub fn pre_sell_in(&mut self) {
+    fn pre_sell_in(&mut self) {
         match self.name.as_str() {
             "Aged Brie" => self.increase_quality(),
             "Backstage passes to a TAFKAL80ETC concert" => {
@@ -48,18 +48,25 @@ impl Item {
             _ => self.decrease_quality(),
         }
     }
-    pub fn sell_in(&mut self) {
+    fn sell_in(&mut self) {
         if self.name != "Sulfuras, Hand of Ragnaros" {
             self.sell_in -= 1;
         }
     }
-    pub fn post_sell_in(&mut self) {
+    fn post_sell_in(&mut self) {
         match self.name.as_str() {
             "Aged Brie" => self.increase_quality(),
             "Backstage passes to a TAFKAL80ETC concert" => self.reset_quality(),
             "Sulfuras, Hand of Ragnaros" => (),
             _ => self.decrease_quality(),
         };
+    }
+    pub fn update_quality(&mut self) {
+        self.pre_sell_in();
+        self.sell_in();
+        if self.sell_in < 0 {
+            self.post_sell_in();
+        }
     }
 }
 
@@ -80,11 +87,7 @@ impl GildedRose {
 
     pub fn update_quality(&mut self) {
         for item in &mut self.items {
-            item.pre_sell_in();
-            item.sell_in();
-            if item.sell_in < 0 {
-                item.post_sell_in();
-            }
+            item.update_quality();
         }
     }
 }
