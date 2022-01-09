@@ -13,6 +13,9 @@ impl Item {
             quality,
         }
     }
+    pub fn increase_quality(&mut self) {
+        self.quality += 1;
+    }
 }
 
 impl Display for Item {
@@ -32,22 +35,25 @@ impl GildedRose {
 
     pub fn update_quality(&mut self) {
         for item in &mut self.items {
-            if item.name == "Aged Brie" || item.name == "Backstage passes to a TAFKAL80ETC concert"
+            if item.name == "Aged Brie"
             {
                 if item.quality < 50 {
-                    item.quality += 1;
+                    item.increase_quality();
+                }
+            } else if item.name == "Backstage passes to a TAFKAL80ETC concert"
+            {
+                if item.quality < 50 {
+                    item.increase_quality();
 
-                    if item.name == "Backstage passes to a TAFKAL80ETC concert" {
-                        if item.sell_in < 11 {
-                            if item.quality < 50 {
-                                item.quality += 1;
-                            }
+                    if item.sell_in < 11 {
+                        if item.quality < 50 {
+                            item.increase_quality();
                         }
+                    }
 
-                        if item.sell_in < 6 {
-                            if item.quality < 50 {
-                                item.quality += 1;
-                            }
+                    if item.sell_in < 6 {
+                        if item.quality < 50 {
+                            item.increase_quality();
                         }
                     }
                 }
@@ -66,7 +72,7 @@ impl GildedRose {
             if item.sell_in < 0 {
                 if item.name == "Aged Brie" {
                     if item.quality < 50 {
-                        item.quality += 1;
+                        item.increase_quality();
                     }
                 } else if item.name == "Backstage passes to a TAFKAL80ETC concert" {
                     item.quality = item.quality - item.quality;
