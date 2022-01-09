@@ -89,11 +89,83 @@ mod tests {
     use super::{GildedRose, Item};
 
     #[test]
-    pub fn foo() {
-        let items = vec![Item::new("foo", 0, 0)];
+    pub fn when_updating_regular_item_sell_in_and_quality_should_decrease() {
+        let items = vec![Item::new("foo", 10, 10)];
         let mut rose = GildedRose::new(items);
         rose.update_quality();
+        assert_eq!(9, rose.items[0].sell_in);
+        assert_eq!(9, rose.items[0].quality);
+    }
 
-        assert_eq!("fixme", rose.items[0].name);
+    #[test]
+    pub fn when_updating_regular_item_quality_should_stop_decreasing_at_0() {
+        let items = vec![Item::new("bar", 10, 10)];
+        let mut rose = GildedRose::new(items);
+        for _ in 0..20 {
+            rose.update_quality();
+        }
+        assert_eq!(0, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn when_updating_hand_of_ragnaros_quality_should_be_constant() {
+        let items = vec![Item::new("Sulfuras, Hand of Ragnaros", 10, 10)];
+        let mut rose = GildedRose::new(items);
+        for _ in 0..20 {
+            rose.update_quality();
+        }
+        assert_eq!(10, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn when_updating_aged_brie_quality_should_increase() {
+        let items = vec![Item::new("Aged Brie", 10, 10)];
+        let mut rose = GildedRose::new(items);
+        for _ in 0..20 {
+            rose.update_quality();
+        }
+        assert_eq!(40, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn when_updating_backstage_pass_quality_should_increase() {
+        let items = vec![Item::new(
+            "Backstage passes to a TAFKAL80ETC concert",
+            50,
+            20,
+        )];
+        let mut rose = GildedRose::new(items);
+        for _ in 0..20 {
+            rose.update_quality();
+        }
+        assert_eq!(40, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn when_updating_backstage_pass_quality_should_double_before_sell_in_ten() {
+        let items = vec![Item::new(
+            "Backstage passes to a TAFKAL80ETC concert",
+            20,
+            20,
+        )];
+        let mut rose = GildedRose::new(items);
+        for _ in 0..20 {
+            rose.update_quality();
+        }
+        assert_eq!(50, rose.items[0].quality);
+    }
+
+    #[test]
+    pub fn when_updating_backstage_pass_quality_should_be_zero_when_sell_in_negative() {
+        let items = vec![Item::new(
+            "Backstage passes to a TAFKAL80ETC concert",
+            19,
+            20,
+        )];
+        let mut rose = GildedRose::new(items);
+        for _ in 0..20 {
+            rose.update_quality();
+        }
+        assert_eq!(0, rose.items[0].quality);
     }
 }
