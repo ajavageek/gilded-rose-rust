@@ -32,14 +32,8 @@ impl GildedRose {
 
     pub fn update_quality(&mut self) {
         for item in &mut self.items {
-            if item.name != "Aged Brie" && item.name != "Backstage passes to a TAFKAL80ETC concert"
+            if item.name == "Aged Brie" || item.name == "Backstage passes to a TAFKAL80ETC concert"
             {
-                if item.quality > 0 {
-                    if item.name != "Sulfuras, Hand of Ragnaros" {
-                        item.quality -= 1;
-                    }
-                }
-            } else {
                 if item.quality < 50 {
                     item.quality += 1;
 
@@ -57,6 +51,12 @@ impl GildedRose {
                         }
                     }
                 }
+            } else {
+                if item.quality > 0 {
+                    if item.name != "Sulfuras, Hand of Ragnaros" {
+                        item.quality -= 1;
+                    }
+                }
             }
 
             if item.name != "Sulfuras, Hand of Ragnaros" {
@@ -64,7 +64,11 @@ impl GildedRose {
             }
 
             if item.sell_in < 0 {
-                if item.name != "Aged Brie" {
+                if item.name == "Aged Brie" {
+                    if item.quality < 50 {
+                        item.quality += 1;
+                    }
+                } else {
                     if item.name != "Backstage passes to a TAFKAL80ETC concert" {
                         if item.quality > 0 {
                             if item.name != "Sulfuras, Hand of Ragnaros" {
@@ -73,10 +77,6 @@ impl GildedRose {
                         }
                     } else {
                         item.quality = item.quality - item.quality;
-                    }
-                } else {
-                    if item.quality < 50 {
-                        item.quality += 1;
                     }
                 }
             }
