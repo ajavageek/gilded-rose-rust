@@ -14,38 +14,38 @@ impl Item {
         }
     }
     pub fn increase_quality(&mut self) {
-        self.quality += 1;
+        if self.quality < 50 {
+            self.quality += 1;
+        }
     }
     pub fn decrease_quality(&mut self) {
-        self.quality -= 1;
+        if self.quality > 0 {
+            self.quality -= 1;
+        }
     }
     pub fn reset_quality(&mut self) {
         self.quality = 0;
     }
     pub fn pre_sell_in(&mut self) {
         match self.name.as_str() {
-            "Aged Brie" => {
-                if self.quality < 50 {
+            "Aged Brie" => self.increase_quality(),
+            "Backstage passes to a TAFKAL80ETC concert" => {
+                self.increase_quality();
+                if self.sell_in < 11 {
                     self.increase_quality();
                 }
-            }
-            "Backstage passes to a TAFKAL80ETC concert" => {
-                if self.quality < 50 {
+                if self.sell_in < 6 {
                     self.increase_quality();
-                    if self.quality < 50 && self.sell_in < 11 {
+                    if self.sell_in < 11 {
                         self.increase_quality();
                     }
-                    if self.quality < 50 && self.sell_in < 6 {
+                    if self.sell_in < 6 {
                         self.increase_quality();
                     }
                 }
             }
             "Sulfuras, Hand of Ragnaros" => (),
-            _ => {
-                if self.quality > 0 {
-                    self.decrease_quality();
-                }
-            }
+            _ => self.decrease_quality(),
         }
     }
     pub fn sell_in(&mut self) {
@@ -55,18 +55,10 @@ impl Item {
     }
     pub fn post_sell_in(&mut self) {
         match self.name.as_str() {
-            "Aged Brie" => {
-                if self.quality < 50 {
-                    self.increase_quality();
-                }
-            }
+            "Aged Brie" => self.increase_quality(),
             "Backstage passes to a TAFKAL80ETC concert" => self.reset_quality(),
             "Sulfuras, Hand of Ragnaros" => (),
-            _ => {
-                if self.quality > 0 {
-                    self.decrease_quality();
-                }
-            }
+            _ => self.decrease_quality(),
         };
     }
 }
