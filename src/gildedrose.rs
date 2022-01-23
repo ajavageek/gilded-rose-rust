@@ -34,16 +34,8 @@ impl Item {
     fn reset_quality(&mut self) {
         self.quality = 0;
     }
-    fn get_type(&self) -> ItemType {
-        match self.name.as_str() {
-            "Aged Brie" => ItemType::AgedBrie,
-            "Sulfuras, Hand of Ragnaros" => ItemType::HandOfRagnaros,
-            "Backstage passes to a TAFKAL80ETC concert" => ItemType::BackstagePass,
-            _ => ItemType::Regular
-        }
-    }
     fn pre_sell_in(&mut self) {
-        match self.get_type() {
+        match ItemType::from(self.name.as_str())  {
             ItemType::AgedBrie => self.increase_quality(),
             ItemType::BackstagePass => {
                 self.increase_quality();
@@ -65,12 +57,12 @@ impl Item {
         }
    }
     fn sell_in(&mut self) {
-        if self.get_type() != ItemType::HandOfRagnaros {
+        if ItemType::from(self.name.as_str())  != ItemType::HandOfRagnaros {
             self.sell_in -= 1;
         }
     }
     fn post_sell_in(&mut self) {
-        match self.get_type() {
+        match ItemType::from(self.name.as_str()) {
             ItemType::AgedBrie => self.increase_quality(),
             ItemType::BackstagePass => self.reset_quality(),
             ItemType::HandOfRagnaros => (),
@@ -82,6 +74,17 @@ impl Item {
         self.sell_in();
         if self.sell_in < 0 {
             self.post_sell_in();
+        }
+    }
+}
+
+impl From<&str> for ItemType {
+    fn from(slice: &str) -> Self {
+        match slice {
+            "Aged Brie" => ItemType::AgedBrie,
+            "Sulfuras, Hand of Ragnaros" => ItemType::HandOfRagnaros,
+            "Backstage passes to a TAFKAL80ETC concert" => ItemType::BackstagePass,
+            _ => ItemType::Regular
         }
     }
 }
