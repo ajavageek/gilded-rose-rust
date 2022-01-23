@@ -35,7 +35,7 @@ impl Item {
         self.quality = 0;
     }
     fn pre_sell_in(&mut self) {
-        match ItemType::from(self.name.as_str())  {
+        match self.name.as_str().into()  {
             ItemType::AgedBrie => self.increase_quality(),
             ItemType::BackstagePass => {
                 self.increase_quality();
@@ -62,7 +62,7 @@ impl Item {
         }
     }
     fn post_sell_in(&mut self) {
-        match ItemType::from(self.name.as_str()) {
+        match self.name.as_str().into() {
             ItemType::AgedBrie => self.increase_quality(),
             ItemType::BackstagePass => self.reset_quality(),
             ItemType::HandOfRagnaros => (),
